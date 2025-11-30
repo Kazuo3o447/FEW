@@ -90,47 +90,34 @@
             transform: translateX(0);
         }
 
-        /* Artist Tile Specifics */
+        /* Artist Tile Specifics - Clean, No Image Version */
         .artist-tile {
             position: relative;
             overflow: hidden;
-            aspect-ratio: 3/4;
+            aspect-ratio: 3/4; /* Keep the vertical ratio */
             cursor: pointer;
-            /* Changed border to be thinner and more subtle */
-            border: 1px solid rgba(255, 255, 255, 0.15); 
-            background-color: #1a1a1a; /* Dark gray background so tile is visible even if image loads slow */
-            /* Changed shadow to be softer */
-            box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.5);
-            transition: border-color 0.3s ease, transform 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            background-color: #121212; /* Solid dark background */
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8);
+            transition: border-color 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; /* Align text to bottom */
+            padding: 2rem;
         }
         .artist-tile:hover {
-            /* Changed hover border to be a very subtle purple tint */
-            border-color: rgba(217, 70, 239, 0.4);
+            border-color: rgba(217, 70, 239, 0.5); /* Subtle purple border on hover */
+            background-color: #181818; /* Slightly lighter on hover */
             transform: translateY(-5px);
         }
-        .artist-tile img {
-            transition: transform 0.7s ease;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: grayscale(40%) brightness(0.8);
-        }
-        .artist-tile:hover img {
-            transform: scale(1.05);
-            filter: grayscale(0%) brightness(1);
-        }
+        
+        /* Removed img styles for tiles as images are gone */
+        
         .artist-tile-content {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 2rem;
-            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-            transform: translateY(10px);
-            transition: transform 0.4s ease;
-        }
-        .artist-tile:hover .artist-tile-content {
-            transform: translateY(0);
+            /* Since we removed the absolute positioning needed for overlaying images, 
+               we can just let this flow naturally or keep it simple */
+            position: relative;
+            z-index: 10;
         }
     </style>
 </head>
@@ -149,17 +136,17 @@
             <button class="hover-underline uppercase text-xs tracking-[0.2em] font-medium text-gray-300" onclick="router.navigate('contact')">Contact</button>
         </div>
 
-        <!-- Mobile Hamburger Button - Color changed to purple (#D946EF) -->
-        <button id="mobile-menu-btn" class="md:hidden text-[#D946EF] z-50 focus:outline-none" onclick="toggleMobileMenu()">
+        <!-- Mobile Hamburger Button - Purple Color -->
+        <button id="mobile-menu-btn" class="md:hidden z-50 focus:outline-none transition-transform active:scale-95" style="color: var(--accent-purple);" onclick="toggleMobileMenu()">
             <i data-lucide="menu" class="w-8 h-8"></i>
         </button>
 
-        <!-- Mobile Fullscreen Menu Overlay - Updated background and font sizes -->
-        <div id="mobile-menu" class="fixed inset-0 bg-[#050505] z-40 flex flex-col items-center justify-center space-y-8 mobile-menu-closed md:hidden">
-            <button class="text-lg font-serif-display uppercase tracking-widest hover:text-purple-500 transition-colors" onclick="navigateMobile('home')">Home</button>
-            <button class="text-lg font-serif-display uppercase tracking-widest hover:text-purple-500 transition-colors" onclick="navigateMobile('collection')">Collection</button>
-            <button class="text-lg font-serif-display uppercase tracking-widest hover:text-purple-500 transition-colors" onclick="navigateMobile('about')">About</button>
-            <button class="text-lg font-serif-display uppercase tracking-widest hover:text-purple-500 transition-colors text-gray-400" onclick="navigateMobile('contact')">Contact</button>
+        <!-- Mobile Fullscreen Menu Overlay - Dark Background, Readable Text -->
+        <div id="mobile-menu" class="fixed inset-0 bg-[#050505]/98 z-40 flex flex-col items-center justify-center space-y-8 mobile-menu-closed md:hidden">
+            <button class="text-xl font-serif-display uppercase tracking-widest text-white hover:text-purple-500 transition-colors" onclick="navigateMobile('home')">Home</button>
+            <button class="text-xl font-serif-display uppercase tracking-widest text-white hover:text-purple-500 transition-colors" onclick="navigateMobile('collection')">Collection</button>
+            <button class="text-xl font-serif-display uppercase tracking-widest text-white hover:text-purple-500 transition-colors" onclick="navigateMobile('about')">About</button>
+            <button class="text-xl font-serif-display uppercase tracking-widest text-gray-400 hover:text-purple-500 transition-colors" onclick="navigateMobile('contact')">Contact</button>
         </div>
     </nav>
 
@@ -198,19 +185,16 @@
             'marko': {
                 name: 'Marko M.',
                 subtitle: 'modern',
-                coverImage: 'https://images.unsplash.com/photo-1549887534-1541e9326642?q=80&w=1200&auto=format&fit=crop',
                 description: 'Abstract Contemporary'
             },
             'jagon_mitjar': {
                 name: 'Mitjar',
                 subtitle: 'Streetart/Animation',
-                coverImage: 'https://images.unsplash.com/photo-1620626343542-a892b1a62d73?q=80&w=1200&auto=format&fit=crop',
                 description: 'Light Art & Motion'
             },
             'jagon': {
                 name: 'Jagon',
                 subtitle: 'Streetart',
-                coverImage: 'https://images.unsplash.com/photo-1483391748281-22964e52bd9d?q=80&w=1200&auto=format&fit=crop',
                 description: 'Muralism & Graffiti'
             }
         };
@@ -266,11 +250,9 @@
                     <h1 class="font-serif-display text-5xl md:text-7xl lg:text-9xl text-white mb-6 md:mb-8 leading-tight animate-reveal" style="animation-delay: 0.1s">
                         FEW<span class="glowing-dot">.</span>
                     </h1>
-                    <!-- Updated text: removed "we against AI Slop —" -->
                     <p class="text-base md:text-xl text-gray-400 font-light mb-10 md:mb-12 max-w-2xl mx-auto leading-relaxed animate-reveal px-4" style="animation-delay: 0.2s">
                         Handcrafted in Berlin.
                     </p>
-                    <!-- Buttons now use the updated .btn-minimal style for permanent purple styling -->
                     <div class="flex flex-col md:flex-row gap-4 md:gap-6 justify-center animate-reveal w-full md:w-auto" style="animation-delay: 0.3s">
                         <button onclick="router.navigate('collection')" class="btn-minimal w-full md:w-auto text-center">
                             View Collection
@@ -287,7 +269,7 @@
             </section>
         `;
 
-        // The New Collection Overview Page (The "Tiles" page)
+        // The New Collection Overview Page (The "Tiles" page) - Now with NO IMAGES
         router.views.collection = () => `
             <section class="pt-24 md:pt-32 px-6 md:px-12 max-w-8xl mx-auto min-h-screen">
                 <header class="mb-16 md:mb-24 text-center">
@@ -297,29 +279,26 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 animate-reveal" style="animation-delay: 0.2s">
                     
-                    <!-- Tile 1: Marko M. -->
+                    <!-- Tile 1: Marko M. (Pure Text) -->
                     <div class="artist-tile group" onclick="router.navigate('artist', 'marko')">
-                        <img src="${artists['marko'].coverImage}" alt="">
                         <div class="artist-tile-content">
-                            <h2 class="text-3xl font-serif-display text-white mb-1">Marko M.</h2>
+                            <h2 class="text-3xl font-serif-display text-white mb-2 group-hover:text-purple-200 transition-colors">Marko M.</h2>
                             <p class="text-purple-500 text-xs uppercase tracking-[0.2em] font-medium">modern</p>
                         </div>
                     </div>
 
-                    <!-- Tile 2: Jagon, Mitjar -->
-                    <div class="artist-tile group shadow-xl shadow-white/5" onclick="router.navigate('artist', 'jagon_mitjar')">
-                        <img src="${artists['jagon_mitjar'].coverImage}" alt="">
+                    <!-- Tile 2: Jagon, Mitjar (Pure Text) -->
+                    <div class="artist-tile group" onclick="router.navigate('artist', 'jagon_mitjar')">
                         <div class="artist-tile-content">
-                            <h2 class="text-3xl font-serif-display text-white mb-1">Mitjar</h2>
+                            <h2 class="text-3xl font-serif-display text-white mb-2 group-hover:text-purple-200 transition-colors">Mitjar</h2>
                             <p class="text-purple-500 text-xs uppercase tracking-[0.2em] font-medium">Streetart/Animation</p>
                         </div>
                     </div>
 
-                    <!-- Tile 3: Jagon -->
+                    <!-- Tile 3: Jagon (Pure Text) -->
                     <div class="artist-tile group" onclick="router.navigate('artist', 'jagon')">
-                        <img src="${artists['jagon'].coverImage}" alt="">
                         <div class="artist-tile-content">
-                            <h2 class="text-3xl font-serif-display text-white mb-1">Jagon</h2>
+                            <h2 class="text-3xl font-serif-display text-white mb-2 group-hover:text-purple-200 transition-colors">Jagon</h2>
                             <p class="text-purple-500 text-xs uppercase tracking-[0.2em] font-medium">Streetart</p>
                         </div>
                     </div>

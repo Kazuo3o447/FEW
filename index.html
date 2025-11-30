@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FEW - Artist Portfolio Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --bg-color: #050505;
+            --text-main: #f2f2f2;
+            --accent-purple: #D946EF;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        .font-serif-display {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .glowing-dot {
+            color: var(--accent-purple);
+            text-shadow: 0 0 10px rgba(217, 70, 239, 0.6);
+            margin-left: 2px;
+        }
+
+        @keyframes reveal {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-reveal {
+            animation: reveal 1s cubic-bezier(0.2, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+
+        .hover-underline {
+            position: relative;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .hover-underline::after {
+            content: '';
+            position: absolute;
+            width: 0%;
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--accent-purple);
+            transition: width 0.4s ease;
+        }
+        .hover-underline:hover::after {
+            width: 100%;
+        }
+
+        .btn-minimal {
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 1rem 2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-minimal:hover {
+            border-color: var(--accent-purple);
+            background: rgba(217, 70, 239, 0.05);
+            color: white;
+        }
+
+        #mobile-menu {
+            transition: transform 0.3s ease-in-out;
+        }
+        .mobile-menu-closed {
+            transform: translateX(100%);
+        }
+        .mobile-menu-open {
+            transform: translateX(0);
+        }
+
+        /* Artist Tile Specifics */
+        .artist-tile {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 3/4;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Brighter border for visibility */
+            background-color: #1a1a1a; /* Dark gray background so tile is visible even if image loads slow */
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+            transition: border-color 0.3s ease, transform 0.3s ease;
+        }
+        .artist-tile:hover {
+            border-color: var(--accent-purple);
+            transform: translateY(-5px);
+        }
+        .artist-tile img {
+            transition: transform 0.7s ease;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(40%) brightness(0.8);
+        }
+        .artist-tile:hover img {
+            transform: scale(1.05);
+            filter: grayscale(0%) brightness(1);
+        }
+        .artist-tile-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 2rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            transform: translateY(10px);
+            transition: transform 0.4s ease;
+        }
+        .artist-tile:hover .artist-tile-content {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 mix-blend-difference text-white py-4 md:py-6 px-6 md:px-8 flex justify-between items-center backdrop-blur-sm bg-black/20">
+        <a href="#" onclick="router.navigate('home')" class="text-2xl font-serif-display font-bold tracking-wide hover:opacity-80 transition-opacity z-50 relative">
+            FEW<span class="glowing-dot text-3xl">.</span>
+        </a>
+        
+        <div class="hidden md:flex space-x-12">
+            <button class="hover-underline uppercase text-xs tracking-[0.2em] font-medium" onclick="router.navigate('home')">Home</button>
+            <button class="hover-underline uppercase text-xs tracking-[0.2em] font-medium" onclick="router.navigate('collection')">Collection</button>
+            <button class="hover-underline uppercase text-xs tracking-[0.2em] font-medium" onclick="router.navigate('about')">About</button>
+            <button class="hover-underline uppercase text-xs tracking-[0.2em] font-medium text-gray-300" onclick="router.navigate('contact')">Contact</button>
+        </div>
+
+        <button id="mobile-menu-btn" class="md:hidden text-white z-50 focus:outline-none" onclick="toggleMobileMenu()">
+            <i data-lucide="menu" class="w-8 h-8"></i>
+        </button>
+
+        <div id="mobile-menu" class="fixed inset-0 bg-black z-40 flex flex-col items-center justify-center space-y-8 mobile-menu-closed md:hidden">
+            <button class="text-2xl font-serif-display hover:text-purple-500 transition-colors" onclick="navigateMobile('home')">Home</button>
+            <button class="text-2xl font-serif-display hover:text-purple-500 transition-colors" onclick="navigateMobile('collection')">Collection</button>
+            <button class="text-2xl font-serif-display hover:text-purple-500 transition-colors" onclick="navigateMobile('about')">About</button>
+            <button class="text-2xl font-serif-display hover:text-purple-500 transition-colors text-gray-400" onclick="navigateMobile('contact')">Contact</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow">
+        <!-- Content injected here -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-8 md:py-12 border-t border-white/10 text-center px-4">
+        <p class="text-gray-600 text-xs tracking-[0.2em] uppercase">FEW Collective — Berlin /// Est. 2024</p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            if (menu.classList.contains('mobile-menu-closed')) {
+                menu.classList.remove('mobile-menu-closed');
+                menu.classList.add('mobile-menu-open');
+            } else {
+                menu.classList.add('mobile-menu-closed');
+                menu.classList.remove('mobile-menu-open');
+            }
+        }
+
+        function navigateMobile(view) {
+            router.navigate(view);
+            toggleMobileMenu();
+        }
+
+        // --- Data Structure ---
+        // Artists Configuration
+        const artists = {
+            'marko': {
+                name: 'Marko M.',
+                subtitle: 'modern',
+                coverImage: 'https://images.unsplash.com/photo-1549887534-1541e9326642?q=80&w=1200&auto=format&fit=crop',
+                description: 'Abstract Contemporary'
+            },
+            'jagon_mitjar': {
+                name: 'Mitjar',
+                subtitle: 'Streetart/Animation',
+                coverImage: 'https://images.unsplash.com/photo-1620626343542-a892b1a62d73?q=80&w=1200&auto=format&fit=crop',
+                description: 'Light Art & Motion'
+            },
+            'jagon': {
+                name: 'Jagon',
+                subtitle: 'Streetart',
+                coverImage: 'https://images.unsplash.com/photo-1483391748281-22964e52bd9d?q=80&w=1200&auto=format&fit=crop',
+                description: 'Muralism & Graffiti'
+            }
+        };
+
+        // Portfolio Items mapped to IDs
+        const portfolioWorks = [
+            // Jagon Solo (Streetart)
+            { id: 1, title: 'Concrete Kingdom', artistId: 'jagon', year: 2024, imageUrl: 'https://images.unsplash.com/photo-1544252899-72793732d84d?q=80&w=800&auto=format&fit=crop' },
+            { id: 2, title: 'Night Train', artistId: 'jagon', year: 2023, imageUrl: 'https://images.unsplash.com/photo-1517594422361-5eeb8ae275a9?q=80&w=800&auto=format&fit=crop' },
+            { id: 3, title: 'Wall of Fame', artistId: 'jagon', year: 2024, imageUrl: 'https://images.unsplash.com/photo-1483391748281-22964e52bd9d?q=80&w=800&auto=format&fit=crop' },
+            
+            // Marko M (Modern)
+            { id: 4, title: 'Abstract Thought #4', artistId: 'marko', year: 2023, imageUrl: 'https://images.unsplash.com/photo-1549887534-1541e9326642?q=80&w=800&auto=format&fit=crop' },
+            { id: 5, title: 'Urban Flow', artistId: 'marko', year: 2024, imageUrl: 'https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=800&auto=format&fit=crop' },
+            { id: 6, title: 'Primary Motion', artistId: 'marko', year: 2023, imageUrl: 'https://images.unsplash.com/photo-1506790409786-287062b212ad?q=80&w=800&auto=format&fit=crop' },
+            
+            // Jagon, Mitjar (Streetart/Animation) - Using previously "Mäc" images (Light/Mixed)
+            { id: 7, title: 'Urban Chaos', artistId: 'jagon_mitjar', year: 2024, imageUrl: 'https://images.unsplash.com/photo-1533158326339-b10b0377a064?q=80&w=800&auto=format&fit=crop' },
+            { id: 8, title: 'Faces of Berlin', artistId: 'jagon_mitjar', year: 2023, imageUrl: 'https://images.unsplash.com/photo-1572916122601-5e8888062a4d?q=80&w=800&auto=format&fit=crop' },
+            { id: 9, title: 'Neon Portrait', artistId: 'jagon_mitjar', year: 2024, imageUrl: 'https://images.unsplash.com/photo-1620626343542-a892b1a62d73?q=80&w=800&auto=format&fit=crop' },
+        ];
+
+        // --- Router ---
+        const router = {
+            currentView: 'home',
+            currentArtistId: null, // To store selected artist
+            views: {},
+            navigate: function(viewName, param = null) {
+                this.currentView = viewName;
+                if(param) this.currentArtistId = param;
+                this.render();
+                window.scrollTo(0, 0);
+                lucide.createIcons();
+            },
+            render: function() {
+                const contentDiv = document.getElementById('app-content');
+                if (this.currentView === 'artist' && this.currentArtistId) {
+                    contentDiv.innerHTML = this.views['artist'](this.currentArtistId);
+                } else {
+                    contentDiv.innerHTML = this.views[this.currentView]();
+                }
+            }
+        };
+
+        // --- Templates ---
+
+        router.views.home = () => `
+            <section class="min-h-screen flex flex-col justify-center items-center px-6 relative pt-20">
+                <div class="text-center z-10 max-w-5xl">
+                    <p class="text-gray-500 text-xs md:text-sm tracking-[0.3em] uppercase mb-6 md:mb-8 animate-reveal">
+                        Contemporary Urban Art
+                    </p>
+                    <h1 class="font-serif-display text-5xl md:text-7xl lg:text-9xl text-white mb-6 md:mb-8 leading-tight animate-reveal" style="animation-delay: 0.1s">
+                        FEW<span class="glowing-dot">.</span>
+                    </h1>
+                    <p class="text-base md:text-xl text-gray-400 font-light mb-10 md:mb-12 max-w-2xl mx-auto leading-relaxed animate-reveal px-4" style="animation-delay: 0.2s">
+                        we against AI Slop — Handcrafted in Berlin.
+                    </p>
+                    <div class="flex flex-col md:flex-row gap-4 md:gap-6 justify-center animate-reveal w-full md:w-auto" style="animation-delay: 0.3s">
+                        <button onclick="router.navigate('collection')" class="btn-minimal w-full md:w-auto text-center">
+                            View Collection
+                        </button>
+                        <button onclick="router.navigate('contact')" class="btn-minimal border-transparent text-gray-400 hover:text-white w-full md:w-auto text-center">
+                            Contact us
+                        </button>
+                    </div>
+                </div>
+                <div class="absolute bottom-6 left-6 md:bottom-10 md:left-20 text-gray-700 text-[10px] md:text-xs font-mono opacity-50 text-left">
+                    52.5200° N, 13.4050° E<br>
+                    BERLIN - KREUZBERG
+                </div>
+            </section>
+        `;
+
+        // The New Collection Overview Page (The "Tiles" page)
+        router.views.collection = () => `
+            <section class="pt-24 md:pt-32 px-6 md:px-12 max-w-8xl mx-auto min-h-screen">
+                <header class="mb-16 md:mb-24 text-center">
+                    <h1 class="font-serif-display text-4xl md:text-7xl mb-4 md:mb-6 animate-reveal">The Collection</h1>
+                    <p class="text-gray-500 text-xs md:text-sm uppercase tracking-[0.2em] animate-reveal" style="animation-delay: 0.1s">Select an Artist</p>
+                </header>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 animate-reveal" style="animation-delay: 0.2s">
+                    
+                    <!-- Tile 1: Marko M. -->
+                    <div class="artist-tile group" onclick="router.navigate('artist', 'marko')">
+                        <img src="${artists['marko'].coverImage}" alt="">
+                        <div class="artist-tile-content">
+                            <h2 class="text-3xl font-serif-display text-white mb-1">Marko M.</h2>
+                            <p class="text-purple-500 text-xs uppercase tracking-[0.2em] font-medium">modern</p>
+                        </div>
+                    </div>
+
+                    <!-- Tile 2: Jagon, Mitjar -->
+                    <div class="artist-tile group shadow-xl shadow-white/5" onclick="router.navigate('artist', 'jagon_mitjar')">
+                        <img src="${artists['jagon_mitjar'].coverImage}" alt="">
+                        <div class="artist-tile-content">
+                            <h2 class="text-3xl font-serif-display text-white mb-1">Mitjar</h2>
+                            <p class="text-purple-500 text-xs uppercase tracking-[0.2em] font-medium">Streetart/Animation</p>
+                        </div>
+                    </div>
+
+                    <!-- Tile 3: Jagon -->
+                    <div class="artist-tile group" onclick="router.navigate('artist', 'jagon')">
+                        <img src="${artists['jagon'].coverImage}" alt="">
+                        <div class="artist-tile-content">
+                            <h2 class="text-3xl font-serif-display text-white mb-1">Jagon</h2>
+                            <p class="text-purple-500 text-xs uppercase tracking-[0.2em] font-medium">Streetart</p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        `;
+
+        // Detailed Artist Portfolio View
+        router.views.artist = (artistId) => {
+            const artist = artists[artistId];
+            const works = portfolioWorks.filter(work => work.artistId === artistId);
+            
+            const workItems = works.map(work => `
+                <div class="gallery-item group mb-12 cursor-pointer">
+                    <div class="overflow-hidden mb-4 aspect-[4/5]">
+                        <img src="${work.imageUrl}" class="w-full h-full object-cover grayscale-[30%] hover:grayscale-0 transition-all duration-700">
+                    </div>
+                    <div class="flex justify-between items-baseline border-b border-gray-900 pb-2 group-hover:border-purple-900 transition-colors">
+                        <h3 class="text-lg font-medium text-gray-200 group-hover:text-white">${work.title}</h3>
+                        <span class="text-xs text-gray-600">${work.year}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            return `
+                <section class="pt-24 md:pt-32 px-6 md:px-12 max-w-8xl mx-auto min-h-screen">
+                    <div class="mb-12">
+                        <button onclick="router.navigate('collection')" class="text-gray-500 hover:text-white flex items-center gap-2 text-xs uppercase tracking-widest transition-colors mb-8">
+                            <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Collection
+                        </button>
+                        <header class="mb-16 md:mb-24 text-center">
+                            <h1 class="font-serif-display text-4xl md:text-7xl mb-4 md:mb-6 animate-reveal text-white">${artist.name}</h1>
+                            <p class="text-purple-500 text-xs md:text-sm uppercase tracking-[0.2em] animate-reveal" style="animation-delay: 0.1s">${artist.subtitle}</p>
+                        </header>
+                    </div>
+                    
+                    <div class="columns-1 md:columns-2 lg:columns-3 gap-8 md:gap-12 animate-reveal" style="animation-delay: 0.2s">
+                        ${workItems}
+                    </div>
+                </section>
+            `;
+        };
+
+        router.views.about = () => `
+            <section class="pt-24 md:pt-32 px-6 md:px-20 max-w-4xl mx-auto min-h-screen flex flex-col justify-center">
+                <span class="text-purple-500 text-xs uppercase tracking-[0.3em] mb-6 md:mb-8 block animate-reveal">About Us</span>
+                <h1 class="font-serif-display text-3xl md:text-6xl leading-tight mb-8 md:mb-12 animate-reveal" style="animation-delay: 0.1s">
+                    We create distinct, physical art in an increasingly digital noise.
+                </h1>
+                <div class="space-y-6 md:space-y-8 text-base md:text-xl font-light text-gray-400 leading-relaxed animate-reveal" style="animation-delay: 0.2s">
+                    <p>FEW (Fellows) ist ein Kollektiv von Künstlern aus Berlin. Wir glauben daran, dass Kunst physisch, greifbar und menschlich sein muss.</p>
+                    <p>In einer Welt voller "AI Slop" und algorithmisch generierter Perfektion setzen wir auf das Unperfekte, das Handwerkliche, den Dreck unter den Fingernägeln.</p>
+                </div>
+                <div class="mt-16 md:mt-20 pt-10 border-t border-gray-800 animate-reveal" style="animation-delay: 0.3s">
+                    <p class="font-serif-display text-xl md:text-2xl italic text-white mb-4">"Kunst ohne Filter. Direkt vom Beton."</p>
+                </div>
+            </section>
+        `;
+
+        router.views.contact = () => `
+            <section class="min-h-screen flex flex-col justify-center items-center px-6 py-20">
+                <h1 class="font-serif-display text-5xl md:text-7xl mb-12 animate-reveal">Contact<span class="text-purple-500">.</span></h1>
+                <form class="w-full max-w-lg space-y-8 md:space-y-12 animate-reveal" style="animation-delay: 0.1s" onsubmit="event.preventDefault(); this.reset(); alert('Danke. Wir melden uns.');">
+                    <div class="group"><input type="text" placeholder="Name" class="w-full bg-transparent border-b border-gray-700 py-4 text-lg md:text-xl text-white outline-none focus:border-purple-500 transition-colors placeholder-gray-600"></div>
+                    <div class="group"><input type="email" placeholder="Email" class="w-full bg-transparent border-b border-gray-700 py-4 text-lg md:text-xl text-white outline-none focus:border-purple-500 transition-colors placeholder-gray-600"></div>
+                    <div class="group"><textarea rows="1" placeholder="Inquiry" class="w-full bg-transparent border-b border-gray-700 py-4 text-lg md:text-xl text-white outline-none focus:border-purple-500 transition-colors placeholder-gray-600 resize-none"></textarea></div>
+                    <div class="pt-8 text-center"><button class="btn-minimal w-full md:w-auto px-12">Send Message</button></div>
+                </form>
+                <div class="mt-16 md:mt-20 text-center animate-reveal" style="animation-delay: 0.2s">
+                    <a href="mailto:info@few.berlin" class="text-gray-500 hover:text-white transition-colors">info@few.berlin</a>
+                </div>
+            </section>
+        `;
+
+        window.onload = () => {
+            router.navigate('home');
+            lucide.createIcons();
+        };
+        document.addEventListener('DOMContentLoaded', () => router.render());
+    </script>
+</body>
+</html>

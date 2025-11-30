@@ -63,8 +63,11 @@
             width: 100%;
         }
 
+        /* Updated button style for permanent purple border and background */
         .btn-minimal {
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid var(--accent-purple);
+            background: rgba(217, 70, 239, 0.05);
+            color: white;
             padding: 1rem 2rem;
             text-transform: uppercase;
             letter-spacing: 0.1em;
@@ -74,9 +77,7 @@
             overflow: hidden;
         }
         .btn-minimal:hover {
-            border-color: var(--accent-purple);
-            background: rgba(217, 70, 239, 0.05);
-            color: white;
+            background: rgba(217, 70, 239, 0.15);
         }
 
         #mobile-menu {
@@ -95,13 +96,16 @@
             overflow: hidden;
             aspect-ratio: 3/4;
             cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.2); /* Brighter border for visibility */
+            /* Changed border to be thinner and more subtle */
+            border: 1px solid rgba(255, 255, 255, 0.15); 
             background-color: #1a1a1a; /* Dark gray background so tile is visible even if image loads slow */
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+            /* Changed shadow to be softer */
+            box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.5);
             transition: border-color 0.3s ease, transform 0.3s ease;
         }
         .artist-tile:hover {
-            border-color: var(--accent-purple);
+            /* Changed hover border to be a very subtle purple tint */
+            border-color: rgba(217, 70, 239, 0.4);
             transform: translateY(-5px);
         }
         .artist-tile img {
@@ -145,15 +149,17 @@
             <button class="hover-underline uppercase text-xs tracking-[0.2em] font-medium text-gray-300" onclick="router.navigate('contact')">Contact</button>
         </div>
 
-        <button id="mobile-menu-btn" class="md:hidden text-white z-50 focus:outline-none" onclick="toggleMobileMenu()">
+        <!-- Mobile Hamburger Button - Color changed to purple (#D946EF) -->
+        <button id="mobile-menu-btn" class="md:hidden text-[#D946EF] z-50 focus:outline-none" onclick="toggleMobileMenu()">
             <i data-lucide="menu" class="w-8 h-8"></i>
         </button>
 
-        <div id="mobile-menu" class="fixed inset-0 bg-black z-40 flex flex-col items-center justify-center space-y-8 mobile-menu-closed md:hidden">
-            <button class="text-2xl font-serif-display hover:text-purple-500 transition-colors" onclick="navigateMobile('home')">Home</button>
-            <button class="text-2xl font-serif-display hover:text-purple-500 transition-colors" onclick="navigateMobile('collection')">Collection</button>
-            <button class="text-2xl font-serif-display hover:text-purple-500 transition-colors" onclick="navigateMobile('about')">About</button>
-            <button class="text-2xl font-serif-display hover:text-purple-500 transition-colors text-gray-400" onclick="navigateMobile('contact')">Contact</button>
+        <!-- Mobile Fullscreen Menu Overlay - Updated background and font sizes -->
+        <div id="mobile-menu" class="fixed inset-0 bg-[#050505] z-40 flex flex-col items-center justify-center space-y-8 mobile-menu-closed md:hidden">
+            <button class="text-lg font-serif-display uppercase tracking-widest hover:text-purple-500 transition-colors" onclick="navigateMobile('home')">Home</button>
+            <button class="text-lg font-serif-display uppercase tracking-widest hover:text-purple-500 transition-colors" onclick="navigateMobile('collection')">Collection</button>
+            <button class="text-lg font-serif-display uppercase tracking-widest hover:text-purple-500 transition-colors" onclick="navigateMobile('about')">About</button>
+            <button class="text-lg font-serif-display uppercase tracking-widest hover:text-purple-500 transition-colors text-gray-400" onclick="navigateMobile('contact')">Contact</button>
         </div>
     </nav>
 
@@ -162,9 +168,9 @@
         <!-- Content injected here -->
     </main>
 
-    <!-- Footer -->
+    <!-- Footer with updated year -->
     <footer class="py-8 md:py-12 border-t border-white/10 text-center px-4">
-        <p class="text-gray-600 text-xs tracking-[0.2em] uppercase">FEW Collective — Berlin /// Est. 2024</p>
+        <p class="text-gray-600 text-xs tracking-[0.2em] uppercase">FEW Collective — Berlin /// Est. 2013</p>
     </footer>
 
     <script>
@@ -260,14 +266,16 @@
                     <h1 class="font-serif-display text-5xl md:text-7xl lg:text-9xl text-white mb-6 md:mb-8 leading-tight animate-reveal" style="animation-delay: 0.1s">
                         FEW<span class="glowing-dot">.</span>
                     </h1>
+                    <!-- Updated text: removed "we against AI Slop —" -->
                     <p class="text-base md:text-xl text-gray-400 font-light mb-10 md:mb-12 max-w-2xl mx-auto leading-relaxed animate-reveal px-4" style="animation-delay: 0.2s">
-                        we against AI Slop — Handcrafted in Berlin.
+                        Handcrafted in Berlin.
                     </p>
+                    <!-- Buttons now use the updated .btn-minimal style for permanent purple styling -->
                     <div class="flex flex-col md:flex-row gap-4 md:gap-6 justify-center animate-reveal w-full md:w-auto" style="animation-delay: 0.3s">
                         <button onclick="router.navigate('collection')" class="btn-minimal w-full md:w-auto text-center">
                             View Collection
                         </button>
-                        <button onclick="router.navigate('contact')" class="btn-minimal border-transparent text-gray-400 hover:text-white w-full md:w-auto text-center">
+                        <button onclick="router.navigate('contact')" class="btn-minimal w-full md:w-auto text-center">
                             Contact us
                         </button>
                     </div>
